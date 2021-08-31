@@ -28,5 +28,22 @@ class WeatherApi{
       print(e); 
       return null;
     }
+  } 
+
+  Future<Weather?> getCityWeather(String cityName) async {
+    try{
+      final response = await this._dio.get( 
+        "$openWeatherMapURL?q=$cityName&appid=$apiKey&units=metric"
+      );
+
+      Map<String,dynamic> json = {}; 
+      json["id"]=response.data['weather'][0]['id']; 
+      json["temp"]= response.data['main']['temp']; 
+      json["city"]=response.data['name']; 
+      return Weather.fromJson(json);
+    }catch(e){
+      print(e); 
+      return null;
+    }
   }
 }

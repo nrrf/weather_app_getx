@@ -37,20 +37,10 @@ class LocationScreen extends StatelessWidget {
                       ),
                     ),
                     FlatButton(
+                      // other option of onPressed:
+                      // onPressed: _searchByCity,
                       onPressed: () async {
-                        // var typedName = await Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(
-                        //     builder: (context) {
-                        //       return CityScreen();
-                        //     },
-                        //   ),
-                        // );
-                        // if (typedName != null) {
-                        //   var weatherData =
-                        //       await weatherModel.getCityWeather(typedName);
-                        //   updateUI(weatherData);
-                        // }
+                        _.searchByCity();
                       },
                       child: Icon(
                         Icons.location_city,
@@ -63,23 +53,29 @@ class LocationScreen extends StatelessWidget {
                   padding: EdgeInsets.only(left: 15.0),
                   child: Row(
                     children: <Widget>[
-                      Text(
-                        '${_.weather.temp}°',
-                        style: kTempTextStyle,
+                      Obx(
+                        () => Text(
+                          '${_.weather.temp}°',
+                          style: kTempTextStyle,
+                        ),
                       ),
-                      Text(
-                        '${_.weather.weatherIcon}',
-                        style: kConditionTextStyle,
+                      Obx(
+                        () => Text(
+                          '${_.weather.weatherIcon}',
+                          style: kConditionTextStyle,
+                        ),
                       ),
                     ],
                   ),
                 ),
                 Padding(
                   padding: EdgeInsets.only(right: 15.0),
-                  child: Text(
-                    "${_.weather.tempMessage} in ${_.weather.city}",
-                    textAlign: TextAlign.right,
-                    style: kMessageTextStyle,
+                  child: Obx(
+                    () => Text(
+                      "${_.weather.tempMessage} in ${_.weather.city}",
+                      textAlign: TextAlign.right,
+                      style: kMessageTextStyle,
+                    ),
                   ),
                 ),
               ],
