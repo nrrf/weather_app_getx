@@ -14,10 +14,10 @@ class WeatherController extends GetxController{
     super.onInit();  
   } 
 
- Future<dynamic> loadLocationWeather() async {
+ Future<Weather?> loadLocationWeather() async {
    Location location = Location();
    await location.getCurrentLocation();
 
-   _weather = await WeatherApi.instance.getLocationWeather(location.latitude,location.longitude);
+   return _weather = await WeatherApi.instance.getLocationWeather(location.latitude,location.longitude);
   } 
 }

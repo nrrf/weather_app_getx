@@ -2,42 +2,73 @@
 //
 //     final weather = weatherFromJson(jsonString);
 
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:meta/meta.dart';
 import 'dart:convert';
 
 Weather weatherFromJson(String str) => Weather.fromJson(json.decode(str));
 
-String weatherToJson(Weather data) => json.encode(data.toJson());
+
+class RxWeather {
+  final RxInt id;
+  final RxInt temp;
+  final RxString city;
+  final RxString weatherIcon;
+  final RxString tempMessage;
+
+  RxWeather(
+      {required this.id,
+      required this.temp,
+      required this.city,
+      required this.weatherIcon,
+      required this.tempMessage});
+}
 
 class Weather {
-  Weather({
-    @required this.id,
-    @required this.temp,
-    @required this.city,
-  }) {
-    weatherIcon = getWeatherIcon(id!);
-    tempMessage = getMessage(temp!);
-  }
+  late RxWeather rx;
 
-  final int? id;
-  final int? temp;
-  final String? city;
-  String? weatherIcon;
-  String? tempMessage;
+  Weather({
+    required int id,
+    required int temp,
+    required String city,
+  }) {
+    String weatherIcon = getWeatherIcon(id);
+    String tempMessage = getMessage(temp);
+    this.rx = RxWeather(
+        id: id.obs,
+        temp: temp.obs,
+        city: city.obs,
+        weatherIcon: weatherIcon.obs,
+        tempMessage: tempMessage.obs);
+  }
 
   factory Weather.fromJson(Map<String, dynamic> json) => Weather(
         id: json["id"],
         temp: json["temp"].toInt(),
         city: json["city"],
-      );
+      ); 
 
-  Map<String, dynamic> toJson() => {
-        "id": id,
-        "temp": temp,
-        "city": city,
-        "weatherIcon": weatherIcon,
-        "tempMessage": tempMessage,
-      };
+  int get id => this.rx.id.value; 
+  int get temp => this.rx.temp.value; 
+  String get city=> this.rx.city.value;
+  String get weatherIcon=> this.rx.weatherIcon.value;
+  String get tempMessage=> this.rx.tempMessage.value;
+
+  set id(int id) {
+    this.rx.id.value = id;
+    String weatherIcon = getWeatherIcon(id);
+    this.rx.weatherIcon.value = weatherIcon;
+  }
+
+  set temp(int temp) {
+    this.rx.temp.value = temp.toInt();
+    String tempMessage = getMessage(temp.toInt());
+    this.rx.tempMessage.value = tempMessage;
+  }
+
+  set city(String city) {
+    this.rx.city.value = city;
+  }
 
   String getWeatherIcon(int condition) {
     if (condition < 300) {
